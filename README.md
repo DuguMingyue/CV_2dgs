@@ -192,3 +192,7 @@ If you find our code or paper helps, please consider citing:
     doi       = {10.1145/3641519.3657428}
 }
 ```
+
+# conda 安装
+conda install -c "nvidia/label/cuda-11.8.0" cuda-toolkit
+nvcc -V
