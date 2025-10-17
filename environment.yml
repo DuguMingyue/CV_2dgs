@@ -6,7 +6,7 @@ channels:
   - defaults
 dependencies:
   - cudatoolkit=11.8
-  - cudnn=8.7.0
+  - cudnn
   - ffmpeg=4.2.2
   - pillow=10.2.0
   - pip=23.3.1
