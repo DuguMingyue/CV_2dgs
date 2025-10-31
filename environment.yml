@@ -26,3 +26,5 @@ dependencies:
     - submodules/simple-knn
     - plyfile
     - opencv-python
+    - matplotlib
+    - tqdm
