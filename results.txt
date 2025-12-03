@@ -1,0 +1,222 @@
+##### 1.1 #####
+
+Scene: eval/mipnerf360/bicycle
+Method: ours_30000
+  SSIM :    0.7304360
+  PSNR :   24.7138481
+  LPIPS:    0.2732950
+
+Scene: eval/mipnerf360/flowers
+Method: ours_30000
+  SSIM :    0.5716661
+  PSNR :   21.0642776
+  LPIPS:    0.3781154
+
+Scene: eval/mipnerf360/garden
+Method: ours_30000
+  SSIM :    0.8381581
+  PSNR :   26.5900097
+  LPIPS:    0.1488575
+
+Scene: eval/mipnerf360/stump
+Method: ours_30000
+  SSIM :    0.7559313
+  PSNR :   26.1940937
+  LPIPS:    0.2598832
+
+Scene: eval/mipnerf360/treehill
+Method: ours_30000
+  SSIM :    0.6163703
+  PSNR :   22.4057369
+  LPIPS:    0.3791534
+
+Scene: eval/mipnerf360/room
+Method: ours_30000
+  SSIM :    0.9050086
+  PSNR :   30.6166859
+  LPIPS:    0.2454018
+
+Scene: eval/mipnerf360/counter
+Method: ours_30000
+  SSIM :    0.8898838
+  PSNR :   28.0417213
+  LPIPS:    0.2329017
+
+Scene: eval/mipnerf360/kitchen
+Method: ours_30000
+  SSIM :    0.9140698
+  PSNR :   30.2599297
+  LPIPS:    0.1477621
+
+Scene: eval/mipnerf360/bonsai
+Method: ours_30000
+  SSIM :    0.9287550
+  PSNR :   31.1901989
+  LPIPS:    0.2289463
+
+##### 1.2 #####
+Scene: eval/mipnerf360/bicycle
+Method: ours_30000
+  SSIM :    0.7308232
+  PSNR :   24.7134323
+  LPIPS:    0.2731304
+
+Scene: eval/mipnerf360/flowers
+Method: ours_30000
+  SSIM :    0.5716092
+  PSNR :   21.0026779
+  LPIPS:    0.3776237
+
+Scene: eval/mipnerf360/garden
+Method: ours_30000
+  SSIM :    0.8372433
+  PSNR :   26.5371914
+  LPIPS:    0.1493653
+
+Scene: eval/mipnerf360/stump
+Method: ours_30000
+  SSIM :    0.7553689
+  PSNR :   26.1314602
+  LPIPS:    0.2594413
+
+Scene: eval/mipnerf360/treehill
+Method: ours_30000
+  SSIM :    0.6176692
+  PSNR :   22.2681580
+  LPIPS:    0.3773819
+
+Scene: eval/mipnerf360/room
+Method: ours_30000
+  SSIM :    0.9047060
+  PSNR :   30.5780067
+  LPIPS:    0.2459470
+
+Scene: eval/mipnerf360/counter
+Method: ours_30000
+  SSIM :    0.8901054
+  PSNR :   28.0723095
+  LPIPS:    0.2328999
+
+Scene: eval/mipnerf360/kitchen
+Method: ours_30000
+  SSIM :    0.9140157
+  PSNR :   30.2333260
+  LPIPS:    0.1479373
+
+Scene: eval/mipnerf360/bonsai
+Method: ours_30000
+  SSIM :    0.9287539
+  PSNR :   31.2152901
+  LPIPS:    0.2292046
+
+##### 1.3 #####
+
+Scene: eval/mipnerf360/bicycle
+Method: ours_30000
+  SSIM :    0.7314404
+  PSNR :   24.7027397
+  LPIPS:    0.2718936
+
+Scene: eval/mipnerf360/flowers
+Method: ours_30000
+  SSIM :    0.5720871
+  PSNR :   21.0808392
+  LPIPS:    0.3771667
+
+Scene: eval/mipnerf360/garden
+Method: ours_30000
+  SSIM :    0.8379266
+  PSNR :   26.6021633
+  LPIPS:    0.1490457
+
+Scene: eval/mipnerf360/stump
+Method: ours_30000
+  SSIM :    0.7532891
+  PSNR :   26.0456409
+  LPIPS:    0.2621195
+
+Scene: eval/mipnerf360/treehill
+Method: ours_30000
+  SSIM :    0.6163079
+  PSNR :   22.3386440
+  LPIPS:    0.3782722
+
+Scene: eval/mipnerf360/room
+Method: ours_30000
+  SSIM :    0.9050049
+  PSNR :   30.6806831
+  LPIPS:    0.2455891
+
+Scene: eval/mipnerf360/counter
+Method: ours_30000
+  SSIM :    0.8901193
+  PSNR :   28.0800209
+  LPIPS:    0.2331958
+
+Scene: eval/mipnerf360/kitchen
+Method: ours_30000
+  SSIM :    0.9140552
+  PSNR :   30.3522873
+  LPIPS:    0.1481217
+
+Scene: eval/mipnerf360/bonsai
+Method: ours_30000
+  SSIM :    0.9287627
+  PSNR :   31.2243652
+  LPIPS:    0.2292927
+
+##### 2.1 #####
+Scene: eval/mipnerf360/bicycle
+Method: ours_30000
+  SSIM :    0.7354459
+  PSNR :   24.7386894
+  LPIPS:    0.2584377
+
+Scene: eval/mipnerf360/flowers
+Method: ours_30000
+  SSIM :    0.5820386
+  PSNR :   21.1082840
+  LPIPS:    0.3624108
+
+Scene: eval/mipnerf360/garden
+Method: ours_30000
+  SSIM :    0.8394853
+  PSNR :   26.7110844
+  LPIPS:    0.1421922
+
+Scene: eval/mipnerf360/stump
+Method: ours_30000
+  SSIM :    0.7564257
+  PSNR :   26.2287083
+  LPIPS:    0.2472139
+
+Scene: eval/mipnerf360/treehill
+Method: ours_30000
+  SSIM :    0.6161405
+  PSNR :   22.2262669
+  LPIPS:    0.3639098
+
+Scene: eval/mipnerf360/room
+Method: ours_30000
+  SSIM :    0.9082237
+  PSNR :   31.0930920
+  LPIPS:    0.2372001
+
+Scene: eval/mipnerf360/counter
+Method: ours_30000
+  SSIM :    0.8928327
+  PSNR :   28.5232658
+  LPIPS:    0.2232032
+
+Scene: eval/mipnerf360/kitchen
+Method: ours_30000
+  SSIM :    0.9132470
+  PSNR :   30.7488918
+  LPIPS:    0.1470097
+
+Scene: eval/mipnerf360/bonsai
+Method: ours_30000
+  SSIM :    0.9313338
+  PSNR :   31.5758114
+  LPIPS:    0.2206518
+

@@ -34,6 +34,10 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
     gaussians = GaussianModel(dataset.sh_degree)
     scene = Scene(dataset, gaussians)
     gaussians.training_setup(opt)
+    # === 新增：强制加载语义信息（如果存在）===
+    if hasattr(gaussians, 'try_load_semantic_info'):
+        gaussians.try_load_semantic_info()
+    # =====================================
     if checkpoint:
         (model_params, first_iter) = torch.load(checkpoint)
         gaussians.restore(model_params, opt)
@@ -51,32 +55,35 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
 
     progress_bar = tqdm(range(first_iter, opt.iterations), desc="Training progress")
     first_iter += 1
-    for iteration in range(first_iter, opt.iterations + 1):        
+    #  接下来开始循环迭代 -------------------------------------------------------------------------------------------------
+    for iteration in range(first_iter, opt.iterations + 1):
 
+        # 用于测量迭代时间。
         iter_start.record()
-
+        # 新学习率
         gaussians.update_learning_rate(iteration)
 
-        # Every 1000 its we increase the levels of SH up to a maximum degree
+        # 每 1000 次迭代，增加球谐函数的阶数
         if iteration % 1000 == 0:
             gaussians.oneupSHdegree()
 
-        # Pick a random Camera
+        # 随机选择一个训练相机
         if not viewpoint_stack:
             viewpoint_stack = scene.getTrainCameras().copy()
         viewpoint_cam = viewpoint_stack.pop(randint(0, len(viewpoint_stack)-1))
-        
+
         render_pkg = render(viewpoint_cam, gaussians, pipe, background)
         image, viewspace_point_tensor, visibility_filter, radii = render_pkg["render"], render_pkg["viewspace_points"], render_pkg["visibility_filter"], render_pkg["radii"]
-        
+
+        # Loss Function 损失函数 写得挺乱 给拆开了
         gt_image = viewpoint_cam.original_image.cuda()
         Ll1 = l1_loss(image, gt_image)
         loss = (1.0 - opt.lambda_dssim) * Ll1 + opt.lambda_dssim * (1.0 - ssim(image, gt_image))
-        
-        # regularization
+
+        # 正则化
+        # 正态分布
         lambda_normal = opt.lambda_normal if iteration > 7000 else 0.0
         lambda_dist = opt.lambda_dist if iteration > 3000 else 0.0
-
         rend_dist = render_pkg["rend_dist"]
         rend_normal  = render_pkg['rend_normal']
         surf_normal = render_pkg['surf_normal']
@@ -84,13 +91,13 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
         normal_loss = lambda_normal * (normal_error).mean()
         dist_loss = lambda_dist * (rend_dist).mean()
 
-        # loss
+        # 总损失
         total_loss = loss + dist_loss + normal_loss
-        
+        # 反向传播
         total_loss.backward()
-
+        # 测量总迭代时间
         iter_end.record()
-
+        # 记录损失的指数移动平均值，并定期更新进度条
         with torch.no_grad():
             # Progress bar
             ema_loss_for_log = 0.4 * loss.item() + 0.6 * ema_loss_for_log
@@ -105,43 +112,53 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
                     "normal": f"{ema_normal_for_log:.{5}f}",
                     "Points": f"{len(gaussians.get_xyz)}"
                 }
+
                 progress_bar.set_postfix(loss_dict)
 
                 progress_bar.update(10)
             if iteration == opt.iterations:
                 progress_bar.close()
 
-            # Log and save
+            # 将 L1 loss、总体 loss 和迭代时间写入 TensorBoard。
             if tb_writer is not None:
                 tb_writer.add_scalar('train_loss_patches/dist_loss', ema_dist_for_log, iteration)
                 tb_writer.add_scalar('train_loss_patches/normal_loss', ema_normal_for_log, iteration)
 
             training_report(tb_writer, iteration, Ll1, loss, l1_loss, iter_start.elapsed_time(iter_end), testing_iterations, scene, render, (pipe, background))
+            # 如果达到保存迭代次数，保存场景
             if (iteration in saving_iterations):
                 print("\n[ITER {}] Saving Gaussians".format(iteration))
                 scene.save(iteration)
 
-
-            # Densification
+            # 在一定的迭代次数内进行密集化处理
             if iteration < opt.densify_until_iter:
+                # 将每个像素位置上的最大半径记录在 max_radii2D 中。这是为了密集化时进行修剪（pruning）操作时的参考。
                 gaussians.max_radii2D[visibility_filter] = torch.max(gaussians.max_radii2D[visibility_filter], radii[visibility_filter])
+                # 将与密集化相关的统计信息添加到 gaussians 模型中，包括视图空间点和可见性过滤器
                 gaussians.add_densification_stats(viewspace_point_tensor, visibility_filter)
-
+                # 在指定的迭代次数之后，每隔一定的迭代间隔进行以下密集化操作
+                # 大于500次的时候，并且除以100余0
                 if iteration > opt.densify_from_iter and iteration % opt.densification_interval == 0:
+                    # 据当前迭代次数设置密集化的阈值。如果当前迭代次数大于 opt.opacity_reset_interval，则设置 size_threshold 为 20，否则为 None
                     size_threshold = 20 if iteration > opt.opacity_reset_interval else None
+                    # 执行密集化和修剪操作，其中包括梯度阈值、密集化阈值、相机范围和之前计算的 size_threshold。
                     gaussians.densify_and_prune(opt.densify_grad_threshold, opt.opacity_cull, scene.cameras_extent, size_threshold)
-                
+                # 在每隔一定迭代次数或在白色背景数据集上的指定迭代次数时，执行以下操作。
                 if iteration % opt.opacity_reset_interval == 0 or (dataset.white_background and iteration == opt.densify_from_iter):
+                    # 重置模型中的某些参数，涉及到透明度的操作，具体实现可以在 reset_opacity 方法中找到。
                     gaussians.reset_opacity()
 
-            # Optimizer step
+            # 执行优化器的步骤，然后清零梯度。
             if iteration < opt.iterations:
                 gaussians.optimizer.step()
                 gaussians.optimizer.zero_grad(set_to_none = True)
 
+            # 如果达到检查点迭代次数，保存检查点
             if (iteration in checkpoint_iterations):
                 print("\n[ITER {}] Saving Checkpoint".format(iteration))
                 torch.save((gaussians.capture(), iteration), scene.model_path + "/chkpnt" + str(iteration) + ".pth")
+
+
 
         with torch.no_grad():        
             if network_gui.conn == None:
